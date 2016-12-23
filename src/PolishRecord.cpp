@@ -25,6 +25,7 @@ bool Polish::IsTrueSymbol(char a) {
 int Polish::priority(char c) {
   switch (c) {
     case '(': return 0;
+    case ')': return 0;
     case '|': return 0;
     case '+': return 1;
     case '-': return 1;
@@ -141,6 +142,9 @@ char* Polish::ConvertToPolish(char* exp) {
       pos++;
     } else {
       switch (*element) {
+      case '^':
+        stack.push(*element);
+        break;
       case '(':
         stack.push(*element);
         bracket_was = 1;
@@ -190,6 +194,9 @@ char* Polish::ConvertToPolish(char* exp) {
       default:
         while (!stack.empty()) {
           if ((priority(*element)) <= priority(stack.gettop())) {
+            if (IsTrueSymbol(last_element))
+              if (priority(last_element))
+                throw std::logic_error("Wrong expression\n");
             result[pos] = stack.gettop();
             pos++;
             result[pos] = ' ';
@@ -200,6 +207,7 @@ char* Polish::ConvertToPolish(char* exp) {
             break;
         }
         if (*element == '-') {
+
           if (!pos) {
             stack.push('_');
           } else {

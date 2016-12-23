@@ -171,6 +171,26 @@ TEST(Calculator, example_11_with_modules) {
   EXPECT_EQ(-10, res);
 }
 
+TEST(Calculator, example_12_with_modules) {
+  Polish Expression;
+  char* expression = "|-a|-b";
+  char* a = Expression.ConvertToPolish(expression);
+  Expression.AddVar('a', 5);
+  Expression.AddVar('b', 5);
+  double res = Expression.Calculator(a);
+
+  EXPECT_EQ(0, res);
+}
+
+TEST(Calculator, example_13_with_powers) {
+  Polish Expression;
+  char* expression = "2^3^2";
+  char* a = Expression.ConvertToPolish(expression);
+  double res = Expression.Calculator(a);
+
+  EXPECT_EQ(512, res);
+}
+
 TEST(PolishRecord, throw_when_costant_and_variable_together) {
   Polish Expression;
   char* expression = "(-5a) - 55^5 + 555 -5/(5-5/1)";
@@ -185,14 +205,11 @@ TEST(PolishRecord, throw_when_empty_string) {
   ASSERT_ANY_THROW(Expression.ConvertToPolish(expression));
 }
 
-TEST(Calculator, throw_when_two_operators_together) {
+TEST(PolishRecord, throw_when_two_operators_together) {
   Polish Expression;
   char* expression = "+-10.5+a^(2*b)/4";
-  char* a = Expression.ConvertToPolish(expression);
-  Expression.AddVar('a', 2);
-  Expression.AddVar('b', 2);
 
-  ASSERT_ANY_THROW(Expression.Calculator(a));
+  ASSERT_ANY_THROW(Expression.ConvertToPolish(expression));
 }
 
 TEST(Calculator, throw_when_variable_is_not_declared) {
@@ -225,6 +242,12 @@ TEST(PolishRecord, throw_3_with_empty_brackets) {
 TEST(PolishRecord, throw_4_with_empty_brackets) {
   Polish Expression;
   char* expression = "||";
+  ASSERT_ANY_THROW(Expression.ConvertToPolish(expression));
+}
+
+TEST(PolishRecord, throw_5_with_double_operators) {
+  Polish Expression;
+  char* expression = "--8";
   ASSERT_ANY_THROW(Expression.ConvertToPolish(expression));
 }
 
